@@ -1,0 +1,22 @@
+name: ci
+
+on:
+    push: {}
+    schedule:
+      - cron: '5 1 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: Dockerhub
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: docker login
+      run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+    - name: docker build and push
+      run: |
+        docker build -t "fabienarcellier/cornell" .
+        docker push fabienarcellier/cornell
